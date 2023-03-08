@@ -1,0 +1,29 @@
+@import './base.css';
+
+#app {
+  max-width:  560px;
+  margin: 0 auto;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight:700;
+  line-height: 25px;  
+}
+
+h1 small {
+  color: grey;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.hint {
+  color: grey;
+}
+
+.button-row {
+  justify-content: space-evenly;
+}

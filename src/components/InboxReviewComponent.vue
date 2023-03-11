@@ -20,10 +20,7 @@ export default {
       return this.inbox_tasks[this.current_task_idx];
     },
     isRecurring() {
-      if (this.current_task.due && this.current_task.due.isRecurring) {
-        return true;
-      }
-      return false;
+      return (this.current_task.due && this.current_task.due.isRecurring);
     },
     progress() {
       return (this.current_task_idx+1)/this.inbox_tasks.length*100;

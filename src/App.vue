@@ -4,6 +4,7 @@ import { Dark } from 'quasar'
 import SetTokenComponent from './components/SetTokenComponent.vue'
 import InboxReviewComponent from './components/InboxReviewComponent.vue'
 import OverdueReviewComponent from './components/OverdueReviewComponent.vue'
+import NoDueDateReviewComponent from './components/NoDueDateReviewComponent.vue'
 import TodayReviewComponent from './components/TodayReviewComponent.vue'
 import NiceWorkComponent from './components/NiceWorkComponent.vue'
 
@@ -13,6 +14,7 @@ export default {
     SetTokenComponent,
     InboxReviewComponent,
     OverdueReviewComponent,
+    NoDueDateReviewComponent,
     TodayReviewComponent,
     NiceWorkComponent
   },
@@ -72,21 +74,31 @@ export default {
 
       <q-step
         :name="3"
+        title="No Due Date Review"
+        caption="Optional"
+        icon="calendar_month"
+        active-color="accent"
+        :done="active_review > 3">
+        <NoDueDateReviewComponent @complete="next_review" />        
+      </q-step>      
+
+      <q-step
+        :name="4"
         title="Today Review"
         icon="calendar_today"
         active-color="accent"
-        :done="active_review > 3">
+        :done="active_review > 4">
         <TodayReviewComponent @complete="next_review" />
       </q-step>
 
       <q-step
-        :name="4"
+        :name="5"
         title="All Done"
         icon="rocket"
         done-icon="rocket"
         active-icon="rocket"
         active-color="accent"
-        :done="active_review > 4">
+        :done="active_review > 5">
         <NiceWorkComponent @restart="next_review"/>
       </q-step>      
     </q-stepper>

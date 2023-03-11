@@ -34,7 +34,7 @@ export default {
     next_review() {
       console.log("Review " + this.active_review + " completed.  Moving to next review section")
       this.active_review = this.active_review + 1
-      if (this.active_review == 5) {
+      if (this.active_review == 6) {
         this.active_review = 1;
       }
     }

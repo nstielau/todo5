@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "deploy": "pushd ../todo5; git commit -am 'Updating todo5'; git push origin master; popd",
+    "deploy": "pushd ../nstielau.github.com; git commit -am 'Updating todo5'; git push origin master; popd",
     "build": "vite build --base /todo5/ --outDir ../nstielau.github.com/todo5",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",

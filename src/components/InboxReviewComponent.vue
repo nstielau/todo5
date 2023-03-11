@@ -19,6 +19,12 @@ export default {
     current_task() {
       return this.inbox_tasks[this.current_task_idx];
     },
+    isRecurring() {
+      if (this.current_task.due && this.current_task.due.isRecurring) {
+        return true;
+      }
+      return false;
+    },
     progress() {
       return (this.current_task_idx+1)/this.inbox_tasks.length*100;
     },
@@ -113,7 +119,7 @@ export default {
     <div class="row q-mb-md" id="current_task">
       <div class="col-12">
         <q-card>
-          <q-badge color="accent" class="float-right" v-if="current_task.due.isRecurring">Recurring <q-icon name="autorenew" /></q-badge>
+          <q-badge color="accent" class="float-right" v-if="isRecurring">Recurring <q-icon name="autorenew" /></q-badge>
           <q-badge>{{findProjectNameById(current_task.projectId)}}</q-badge>
           <q-card-section>
             {{ current_task.content }}

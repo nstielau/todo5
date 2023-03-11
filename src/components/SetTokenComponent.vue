@@ -31,15 +31,25 @@ export default {
 </script>
 
 <template>
-    <h1>Todoist token is not set.</h1>
-    <p v-if="error_message" class="error">{{error_message}}</p>
-    <input type="text" v-model="todoist_token">
-    <br/>
-    <button @click="set_todoist_token">Save token</button>
+  <div id="setToken">
+    <div class="row" style="padding-top: 10rem;">
+      <h1>Todoist token is not set.</h1>
+    </div>
+    <div class="row">
+      <p v-if="error_message" class="error">{{error_message}}</p>
+      <input type="text" v-model="todoist_token">
+      <button @click="set_todoist_token">Save token</button>
+    </div>
+  </div>
 </template>
 
 <style>
 .error {
   background-color: red;
+}
+
+#setToken input {
+  width: 100%;
+  margin: 1em 2rem;
 }
 </style>

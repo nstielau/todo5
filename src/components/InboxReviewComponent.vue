@@ -71,10 +71,20 @@ export default {
       .then(response => console.log("Successfully set project"))
       .catch(error => console.log(error));
       // Ignoring the response, assuming it works for speedier UX
-      this.current_task_idx = this.current_task_idx + 1;
-      if (this.inbox_tasks.length == this.current_task_idx) {
-        this.$emit('complete')
+      this.next_task();
+    },
+    next_task() {
+      if (this.inbox_tasks.length == this.current_task_idx + 1) {
+        console.log("Reviewed " + this.inbox_tasks.length + " inbox tasks.");
+        this.$emit('complete');
       }
+      this.current_task_idx = this.current_task_idx + 1;
+    },
+    close_task() {
+      var todoist = new TodoistApi(localStorage.getItem('todoist_token'));
+      todoist.closeTask(this.current_task.id).catch((error) => console.log(error))
+      // Assume API call completes for speedy UX
+      this.next_task();
     },
     findProjectNameById(project_id) {
       console.log("Finding name for project " + project_id)
@@ -133,6 +143,7 @@ export default {
              :style="{backgroundColor: project.color + ' !important'}"
              :label="project.name"
              @click="setProjectForCurrentTask(project)"/>
+      <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
       <p class="hint">Hint: change order and color in todoist app</p>
     </div>
   </div>

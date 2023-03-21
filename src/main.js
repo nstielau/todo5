@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import { Quasar } from 'quasar'
 import * as Sentry from "@sentry/vue";
-import { BrowserTracing } from "@sentry/tracing";
 
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'

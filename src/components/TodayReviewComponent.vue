@@ -1,6 +1,8 @@
 <script>
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
+import CurrentTaskComponent from './CurrentTaskComponent.vue'
+
 export default {
   data() {
     return {
@@ -10,6 +12,9 @@ export default {
       complete: false,
       todoist: new TodoistApi(localStorage.getItem('todoist_token'))
     }
+  },
+  components: {
+    CurrentTaskComponent
   },
   computed: {
     current_task() {
@@ -103,13 +108,10 @@ export default {
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>Are we gonna get to it today?</p>
-      <q-card>
-        <q-badge color="accent" class="float-right" v-if="current_task.due.isRecurring">Recurring <q-icon name="autorenew" /></q-badge>
-        <q-badge>{{findProjectNameById(current_task.projectId)}}</q-badge>
-        <q-card-section>
-          {{ current_task.content }}
-        </q-card-section>
-      </q-card>
+      <CurrentTaskComponent
+        :content="current_task.content"
+        :isRecurring="isRecurring"
+        :project="findProjectNameById(current_task.projectId)"/>
     </div>
   </div>
   <div class="col-12">
@@ -129,7 +131,7 @@ export default {
 </div>
 <div id="spinner" class="row fixed-center" style="justify-content:center;height:300px;width:300px;" v-else>
   <div class="col"></div>
-  <div class="col-6"> 
+  <div class="col-6">
     <q-spinner-gears size="100px" color="accent" />
     <div v-if="complete">No Today Tasks To Review!</div><div v-else class="invisible"></div>
   </div>

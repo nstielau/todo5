@@ -1,6 +1,8 @@
 <script>
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
+import CurrentTaskComponent from './CurrentTaskComponent.vue'
+
 export default {
   data() {
     return {
@@ -9,6 +11,9 @@ export default {
       complete: false,
       current_task_idx: 0
     }
+  },
+  components: {
+    CurrentTaskComponent
   },
   computed: {
     current_task() {
@@ -102,15 +107,10 @@ export default {
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>When should we do this?</p>
-      <q-card>
-        <q-badge color="accent" class="float-right" v-if="current_task.due.isRecurring">
-          Recurring<q-icon name="autorenew" />
-        </q-badge>
-        <q-badge>{{findProjectNameById(current_task.projectId)}}</q-badge>
-        <q-card-section>
-          {{ current_task.content }}
-        </q-card-section>
-      </q-card>
+      <CurrentTaskComponent 
+        :content="current_task.content"
+        :isRecurring="isRecurring"
+        :project="findProjectNameById(current_task.projectId)"/>
     </div>
   </div>
   <div>

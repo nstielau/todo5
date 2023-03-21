@@ -3,6 +3,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
+
+import CurrentTaskComponent from './CurrentTaskComponent.vue'
+
 export default {
   data() {
     return {
@@ -14,6 +17,9 @@ export default {
       todoist_token: localStorage.getItem('todoist_token'),
       todoist: new TodoistApi(localStorage.getItem('todoist_token'))
     }
+  },
+  components: {
+    CurrentTaskComponent
   },
   computed: {
     current_task() {
@@ -123,15 +129,13 @@ export default {
     </q-circular-progress>
     </div>
   
+
     <div class="row q-mb-md" id="current_task">
       <div class="col-12">
-        <q-card>
-          <q-badge color="accent" class="float-right" v-if="isRecurring">Recurring <q-icon name="autorenew" /></q-badge>
-          <q-badge>{{findProjectNameById(current_task.projectId)}}</q-badge>
-          <q-card-section>
-            {{ current_task.content }}
-          </q-card-section>
-        </q-card>
+        <CurrentTaskComponent 
+          :content="current_task.content"
+          :isRecurring="isRecurring"
+          :project="findProjectNameById(current_task.projectId)"/>
       </div>
     </div>
 

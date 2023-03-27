@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "deploy": "node scripts/gh-pages-deploy.mjs",
-    "build": "vite build --base /todo5/ --outDir ../nstielau.github.com/todo5",
+    "build": "vite build --base /todo5/",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"

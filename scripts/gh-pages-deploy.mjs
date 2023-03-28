@@ -12,6 +12,7 @@ import fs from 'fs'
 
     // eslint-disable-next-line no-console
     console.log("Building staging...");
+    await execa("git", ["fetch"]);
     await execa("git", ["checkout", "staging"]);
     await execa("npm", ["exec", "-c", "vite build --base /todo5/staging/ --outDir dist/staging"])
 

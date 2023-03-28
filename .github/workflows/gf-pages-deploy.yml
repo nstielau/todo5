@@ -3,7 +3,6 @@
     push:
       branches:
         - main
-        - staging
   jobs:
     gh-pages-deploy:
       name: Deploying to Github Pages

@@ -11,12 +11,6 @@ import fs from 'fs'
     const folderName = fs.existsSync("dist") ? "dist" : "build";
 
     // eslint-disable-next-line no-console
-    console.log("Building staging...");
-    await execa("git", ["fetch"]);
-    await execa("git", ["checkout", "staging"]);
-    await execa("npm", ["exec", "-c", "vite build --base /todo5/staging/ --outDir dist/staging"])
-
-    // eslint-disable-next-line no-console
     console.log("Adding changes...");
     await execa("git", ["checkout", "--orphan", "gh-pages"]);
     await execa("git", ["--work-tree", folderName, "add", "--all"]);

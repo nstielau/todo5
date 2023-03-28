@@ -19,7 +19,7 @@ import fs from 'fs'
     console.log("Adding changes...");
     await execa("git", ["checkout", "--orphan", "gh-pages"]);
     await execa("git", ["--work-tree", folderName, "add", "--all"]);
-    await execa("git", ["--work-tree", folderName, "commit", "-m", "gh-pages"]);
+    await execa("git", ["--work-tree", folderName, "commit", "-m", "Deploy"]);
 
     // eslint-disable-next-line no-console
     console.log("Pushing to gh-pages...");

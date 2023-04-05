@@ -5,6 +5,8 @@ import { TodoistApi } from '@doist/todoist-api-typescript'
 
 import CurrentTaskComponent from './CurrentTaskComponent.vue'
 import TimerComponent from './TimerComponent.vue'
+import SpinnerComponent from './SpinnerComponent.vue'
+import ReviewHeaderComponent from './partials/ReviewHeaderComponent.vue'
 
 export default {
   data() {
@@ -19,14 +21,11 @@ export default {
     }
   },
   components: {
-    CurrentTaskComponent, TimerComponent
+    CurrentTaskComponent, TimerComponent, SpinnerComponent, ReviewHeaderComponent
   },
   computed: {
     current_task() {
       return this.tasks[this.current_task_idx];
-    },
-    progress() {
-      return (this.current_task_idx+1)/this.tasks.length*100;
     },
   },
   emits: ['complete'],
@@ -117,28 +116,8 @@ export default {
 
 <template>
 <div v-if="current_task">
+  <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Inbox Tasks"/>
   <div class="row">
-    <div class="col-9">
-    <h1>
-      Review Inbox Tasks
-      <small>{{tasks.length}} Inbox Tasks</small>
-    </h1>
-    </div>
-    <div class="col">
-      <q-circular-progress
-        show-value
-        reverse
-        :value="progress"
-        size="75px"
-        :thickness="0.6"
-        font-size="15px"
-        color="accent"
-        center-color="grey-9"
-        class="q-ma-md"
-      >{{current_task_idx+1}}/{{tasks.length}}
-    </q-circular-progress>
-    </div>
-
     <div v-if="!current_task.hasOwnProperty('actionable')">
       <q-slide-item @left="setActionable" @right="setInactionable">
         <template v-slot:left>Actionable<q-icon name="done" /></template>
@@ -178,7 +157,7 @@ export default {
           <q-btn class="q-ma-sm" color="accent" label="Can't right now" @click="setSlow()"/>
         </div>
       </div>
-      
+
       <div v-else>
        <div class="row q-mb-md" id="current_task">
           <div class="col-12">

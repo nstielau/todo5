@@ -3,6 +3,8 @@ import { TodoistApi } from '@doist/todoist-api-typescript'
 
 import CurrentTaskComponent from './CurrentTaskComponent.vue'
 import SpinnerComponent from './SpinnerComponent.vue'
+import ReviewHeaderComponent from './partials/ReviewHeaderComponent.vue'
+
 
 export default {
   data() {
@@ -15,7 +17,7 @@ export default {
     }
   },
   components: {
-    CurrentTaskComponent, SpinnerComponent
+    CurrentTaskComponent, SpinnerComponent, ReviewHeaderComponent
   },
   computed: {
     current_task() {
@@ -83,28 +85,8 @@ export default {
 
 <template>
 <div v-if="current_task">
-  <div class="row">
-    <div class="col-9">
-      <h1>
-        Review Today's Tasks
-        <small>{{tasks.length}} Tasks for Today</small>
-      </h1>
-    </div>
-    <div class="col">
-      <q-circular-progress
-        show-value
-        reverse
-        :value="progress"
-        size="75px"
-        :thickness="0.6"
-        font-size="15px"
-        color="accent"
-        center-color="grey-9"
-        class="q-ma-md"
-      >{{current_task_idx+1}}/{{tasks.length}}
-    </q-circular-progress>
-    </div>
-  </div>
+  <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
+
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>Are we gonna get to it today?</p>

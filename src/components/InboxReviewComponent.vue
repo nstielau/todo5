@@ -26,9 +26,6 @@ export default {
     current_task() {
       return this.tasks[this.current_task_idx];
     },
-    isRecurring() {
-      return (this.current_task.due && this.current_task.due.isRecurring);
-    },
     progress() {
       return (this.current_task_idx+1)/this.tasks.length*100;
     },

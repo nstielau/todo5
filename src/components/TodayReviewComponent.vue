@@ -25,14 +25,22 @@ export default {
     }
   },
   mounted() {
+    var projectsById = {};
     this.todoist.getProjects()
-    .then((projects) => {
-      this.projects = projects;
-    }).catch((error) => console.log(error))
-
+      .then((projects) => {
+        this.projects = projects;
+        for (var i = 0; i < this.projects.length; i++) {
+          projectsById[projects[i].id] = projects[i].name;
+        }
+      }).catch((error) => console.log(error))
     this.todoist.getTasks({filter: "today"})
         .then((tasks) => {
           this.today_tasks = tasks;
+          for (var i = 0; i < this.today_tasks.length; i++) {
+            console.log("TODO: why isn't project setting here?")
+            this.today_tasks[i].project = projectsById[this.today_tasks[i].projectId]
+          }
+
           if (!this.current_task) {
             console.log("No Today tasks to review");
             this.complete = true;
@@ -108,10 +116,7 @@ export default {
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>Are we gonna get to it today?</p>
-      <CurrentTaskComponent
-        :content="current_task.content"
-        :isRecurring="isRecurring"
-        :project="findProjectNameById(current_task.projectId)"/>
+      <CurrentTaskComponent :task="current_task" />
     </div>
   </div>
   <div class="col-12">

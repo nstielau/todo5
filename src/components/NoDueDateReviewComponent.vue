@@ -20,19 +20,22 @@ export default {
     current_task() {
       return this.no_due_date_tasks[this.current_task_idx];
     },
-    isRecurring() {
-      return (this.current_task.due && this.current_task.due.isRecurring);
-    },
     progress() {
       return (this.current_task_idx+1)/this.no_due_date_tasks.length*100;
     }
   },
   mounted() {
     var todoist = new TodoistApi(localStorage.getItem('todoist_token'));
+
+    var projectsById = {};
     todoist.getProjects()
       .then((projects) => {
         this.projects = projects;
+        for (var i = 0; i < projects.length; i++) {
+          projectsById[projects[i].id] = projects[i].name;
+        }
       }).catch((error) => console.log(error))
+
     axios.request('https://api.todoist.com/sync/v9/sync', {
       method: 'POST',
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('todoist_token')},
@@ -52,6 +55,9 @@ export default {
         todoist.getTasks({filter: no_due_date_query})
           .then((tasks) => {
             this.no_due_date_tasks = tasks;
+            for (var i = 0; i < this.no_due_date_tasks.length; i++) {
+              this.no_due_date_tasks[i].project = projectsById[this.no_due_date_tasks[i].projectId]
+            }
             if (!this.current_task) {
               console.log("No no due date tasks to review.");
               this.complete = true;
@@ -132,10 +138,7 @@ export default {
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>Should this have a date?</p>
-      <CurrentTaskComponent 
-        :content="current_task.content"
-        :isRecurring="isRecurring"
-        :project="findProjectNameById(current_task.projectId)"/>
+      <CurrentTaskComponent :task="current_task" />
     </div>
   </div>
   <div>

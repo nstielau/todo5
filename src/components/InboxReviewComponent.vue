@@ -39,6 +39,7 @@ export default {
       this.todoist.getProjects()
         .then(projects => {
           const projectIgnoreRegex = localStorage.getItem("projectIgnoreRegex")
+          var projectsById = {};
           for (var i = 0; i < projects.length; i++) {
               // Add top level projects
               if (projects[i].parentId == null) {
@@ -49,11 +50,14 @@ export default {
               if (projects[i].isInboxProject) {
                 this.inbox_project_id = projects[i].id;
               }
+              projectsById[projects[i].id] = projects[i].name;
           }
-
           this.todoist.getTasks({projectId: this.inbox_project_id})
           .then(inbox_tasks => {
             this.inbox_tasks = inbox_tasks;
+            for (var i = 0; i < this.inbox_tasks.length; i++) {
+              this.inbox_tasks[i].project = projectsById[this.inbox_tasks[i].projectId]
+            }
             if(!this.current_task) {
               console.log("No Inbox tasks to review");
               this.complete = true;
@@ -77,7 +81,7 @@ export default {
       })
       .then(response => console.log("Successfully set project"))
       .catch(error => console.log(error));
-      // Ignoring the response, assuming it works for speedier UX
+      // Ignoring the ressponse, assuming it works for speedier UX
       this.next_task();
     },
     setContentForCurrentTask(content, old_content) {
@@ -99,29 +103,16 @@ export default {
       // Assume API call completes for speedy UX
       this.next_task();
     },
-    findProjectNameById(project_id) {
-      console.log("Finding name for project " + project_id)
-      for (var i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == project_id) {
-          return this.projects[i].name;
-        }
-      }
-      return undefined;
-    },
     setActionable() {
-      console.log("Actionable")
       this.current_task.actionable = true;
     },
     setInactionable() {
-      console.log("Inactionable")
       this.current_task.actionable = false;
     },
     setQuick() {
-      console.log("Quick")
       this.current_task.quick = true;
     },
     setSlow() {
-      console.log("Slow")
       this.current_task.quick = false;
     },
   }
@@ -159,10 +150,7 @@ export default {
         <div class="row q-mb-md" id="current_task">
           <div class="col-12">
               Is this Actionable?
-              <CurrentTaskComponent
-                :content="current_task.content"
-                :isRecurring="isRecurring"
-                :project="findProjectNameById(current_task.projectId)"/>
+              <CurrentTaskComponent :task="current_task" />
           </div>
         </div>
       </q-slide-item>
@@ -175,10 +163,7 @@ export default {
           <div class="row q-mb-md" id="current_task">
             <div class="col-12">
                 Is this under 2 mins to complete?
-                <CurrentTaskComponent
-                  :content="current_task.content"
-                  :isRecurring="isRecurring"
-                  :project="findProjectNameById(current_task.projectId)"/>
+                <CurrentTaskComponent :task="current_task" />
             </div>
           </div>
         </q-slide-item>
@@ -187,10 +172,7 @@ export default {
         <div class="row q-mb-md" id="current_task">
           <div class="col-12">
             <TimerComponent />
-            <CurrentTaskComponent
-              :content="current_task.content"
-              :isRecurring="isRecurring"
-              :project="findProjectNameById(current_task.projectId)"/>
+            <CurrentTaskComponent :task="current_task" />
           </div>
         </div>
         <div class="row button-row">
@@ -202,10 +184,7 @@ export default {
        <div class="row q-mb-md" id="current_task">
           <div class="col-12">
               Is this part of a project?
-              <CurrentTaskComponent
-                :content="current_task.content"
-                :isRecurring="isRecurring"
-                :project="findProjectNameById(current_task.projectId)"/>
+              <CurrentTaskComponent :task="current_task" />
           </div>
 
 
@@ -241,10 +220,7 @@ export default {
                   dense autofocus counter/>
               </q-popup-edit>
 
-              <CurrentTaskComponent
-                :content="current_task.content"
-                :isRecurring="isRecurring"
-                :project="findProjectNameById(current_task.projectId)"/>
+                <CurrentTaskComponent :task="current_task" />
               </div>
 
           <div class="row button-row">

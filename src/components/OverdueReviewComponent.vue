@@ -25,19 +25,25 @@ export default {
   },
   mounted() {
     var todoist = new TodoistApi(localStorage.getItem('todoist_token'));
+    var projectsById = {};
     todoist.getProjects()
       .then((projects) => {
         this.projects = projects;
+        for (var i = 0; i < projects.length; i++) {
+          projectsById[projects[i].id] = projects[i].name;
+        }
       }).catch((error) => console.log(error))
-    
     todoist.getTasks({filter: "overdue"})
       .then((tasks) => {
         this.overdue_tasks = tasks;
+        for (var i = 0; i < this.overdue_tasks.length; i++) {
+          this.overdue_tasks[i].project = projectsById[this.overdue_tasks[i].projectId]
+        }
         if (!this.current_task) {
           console.log("No overdue tasks to review.");
           this.complete = true;
           setTimeout(() => this.$emit('complete'), 1000);
-        }        
+        }
       }).catch((error) => console.log(error))
   },
   emits: ['complete'],
@@ -107,10 +113,7 @@ export default {
   <div class="row q-mb-md" id="current_task">
     <div class="col-12">
       <p>When should we do this?</p>
-      <CurrentTaskComponent 
-        :content="current_task.content"
-        :isRecurring="isRecurring"
-        :project="findProjectNameById(current_task.projectId)"/>
+      <CurrentTaskComponent :task="current_task" />
     </div>
   </div>
   <div>
@@ -127,7 +130,7 @@ export default {
 </div>
 <div id="spinner" class="row fixed-center" style="justify-content:center;height:300px;width:300px;" v-else>
   <div class="col"></div>
-  <div class="col-6"> 
+  <div class="col-6">
     <q-spinner-gears size="100px" color="accent" />
     <div v-if="complete">No Overdue Tasks To Review!</div><div v-else class="invisible"></div>
   </div>

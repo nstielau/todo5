@@ -5,6 +5,7 @@ import { TodoistApi } from '@doist/todoist-api-typescript'
 
 
 import CurrentTaskComponent from './CurrentTaskComponent.vue'
+import TimerComponent from './TimerComponent.vue'
 
 export default {
   data() {
@@ -19,7 +20,7 @@ export default {
     }
   },
   components: {
-    CurrentTaskComponent
+    CurrentTaskComponent, TimerComponent
   },
   computed: {
     current_task() {
@@ -79,6 +80,12 @@ export default {
       // Ignoring the response, assuming it works for speedier UX
       this.next_task();
     },
+    setContentForCurrentTask(content, old_content) {
+      this.todoist.updateTask(this.current_task.id, { content: content })
+        .then((isSuccess) => console.log(isSuccess))
+        .catch((error) => console.log(error));
+        setActionable();
+    },
     next_task() {
       if (this.inbox_tasks.length == this.current_task_idx + 1) {
         console.log("Reviewed " + this.inbox_tasks.length + " inbox tasks.");
@@ -100,6 +107,22 @@ export default {
         }
       }
       return undefined;
+    },
+    setActionable() {
+      console.log("Actionable")
+      this.current_task.actionable = true;
+    },
+    setInactionable() {
+      console.log("Inactionable")
+      this.current_task.actionable = false;
+    },
+    setQuick() {
+      console.log("Quick")
+      this.current_task.quick = true;
+    },
+    setSlow() {
+      console.log("Slow")
+      this.current_task.quick = false;
     },
   }
 }
@@ -128,33 +151,113 @@ export default {
       >{{current_task_idx+1}}/{{inbox_tasks.length}}
     </q-circular-progress>
     </div>
-  
 
-    <div class="row q-mb-md" id="current_task">
-      <div class="col-12">
-        <CurrentTaskComponent 
-          :content="current_task.content"
-          :isRecurring="isRecurring"
-          :project="findProjectNameById(current_task.projectId)"/>
+    <div v-if="!current_task.hasOwnProperty('actionable')">
+      <q-slide-item @left="setActionable" @right="setInactionable">
+        <template v-slot:left>Actionable<q-icon name="done" /></template>
+        <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>
+        <div class="row q-mb-md" id="current_task">
+          <div class="col-12">
+              Is this Actionable?
+              <CurrentTaskComponent
+                :content="current_task.content"
+                :isRecurring="isRecurring"
+                :project="findProjectNameById(current_task.projectId)"/>
+          </div>
+        </div>
+      </q-slide-item>
+    </div>
+    <div v-else-if="current_task.actionable">
+      <div v-if="!current_task.hasOwnProperty('quick')">
+        <q-slide-item @left="setQuick" @right="setSlow">
+          <template v-slot:left>Under 2min<q-icon name="done" /></template>
+          <template v-slot:right>Longer<q-icon name="alarm" /></template>
+          <div class="row q-mb-md" id="current_task">
+            <div class="col-12">
+                Is this under 2 mins to complete?
+                <CurrentTaskComponent
+                  :content="current_task.content"
+                  :isRecurring="isRecurring"
+                  :project="findProjectNameById(current_task.projectId)"/>
+            </div>
+          </div>
+        </q-slide-item>
+      </div>
+      <div v-else-if="current_task.quick">
+        <div class="row q-mb-md" id="current_task">
+          <div class="col-12">
+            <TimerComponent />
+            <CurrentTaskComponent
+              :content="current_task.content"
+              :isRecurring="isRecurring"
+              :project="findProjectNameById(current_task.projectId)"/>
+          </div>
+        </div>
+        <div class="row button-row">
+          <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
+          <q-btn class="q-ma-sm" color="accent" label="Can't right now" @click="setSlow()"/>
+        </div>
+      </div>
+      <div v-else>
+       <div class="row q-mb-md" id="current_task">
+          <div class="col-12">
+              Is this part of a project?
+              <CurrentTaskComponent
+                :content="current_task.content"
+                :isRecurring="isRecurring"
+                :project="findProjectNameById(current_task.projectId)"/>
+          </div>
+
+
+        </div>
+        <div class="row button-row">
+          <q-btn class="q-ma-sm"
+                 v-for="project in projects"
+                 :key="project.id"
+                 color="primary"
+                 :style="{backgroundColor: project.color + ' !important'}"
+                 :label="project.name"
+                 @click="setProjectForCurrentTask(project)"/>
+          <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
+          <p class="hint">Hint: change order and color in todoist app</p>
+        </div>
       </div>
     </div>
 
-    <div class="row button-row">
-      <q-btn class="q-ma-sm"
-             v-for="project in projects"
-             :key="project.id"
-             color="primary"
-             :style="{backgroundColor: project.color + ' !important'}"
-             :label="project.name"
-             @click="setProjectForCurrentTask(project)"/>
-      <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
-      <p class="hint">Hint: change order and color in todoist app</p>
+    <div v-else-if="!current_task.actionable">
+      <div class="row q-mb-md" id="current_task">
+        <div class="col-12" id="foo">
+            This isn't actionable.  Refine or close.
+            <div>
+              <q-popup-edit
+                cover buttons persistent
+                v-slot="scope"
+                v-model="current_task.content"
+                @save="(value, initialValue) => setContentForCurrentTask(value)">
+                <q-input
+                  type="textarea"
+                  v-model="scope.value"
+                  @keyup.enter="scope.set"
+                  dense autofocus counter/>
+              </q-popup-edit>
+
+              <CurrentTaskComponent
+                :content="current_task.content"
+                :isRecurring="isRecurring"
+                :project="findProjectNameById(current_task.projectId)"/>
+              </div>
+
+          <div class="row button-row">
+            <q-btn class="q-ma-sm" color="negative" label="Close" @click="close_task()"/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 <div id="spinner" class="row fixed-center" style="justify-content:center;height:300px;width:300px;" v-else>
   <div class="col"></div>
-  <div class="col-6"> 
+  <div class="col-6">
     <q-spinner-gears size="100px" color="accent" />
     <div v-if="complete">No Inbox Tasks To Review!</div><div v-else class="invisible"></div>
   </div>

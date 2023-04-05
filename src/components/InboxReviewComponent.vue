@@ -121,13 +121,8 @@ export default {
     <div v-if="!current_task.hasOwnProperty('actionable')">
       <q-slide-item @left="setActionable" @right="setInactionable">
         <template v-slot:left>Actionable<q-icon name="done" /></template>
-        <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>
-        <div class="row q-mb-md" id="current_task">
-          <div class="col-12">
-              Is this Actionable?
-              <CurrentTaskComponent :task="current_task" />
-          </div>
-        </div>
+        <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>      
+        <CurrentTaskComponent :task="current_task" prompt="Is this Actionable?"/>
       </q-slide-item>
     </div>
 

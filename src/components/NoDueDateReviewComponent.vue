@@ -107,13 +107,7 @@ export default {
 <template>
 <div v-if="current_task">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Tasks WIth No Due Date"/>
-
-  <div class="row q-mb-md" id="current_task">
-    <div class="col-12">
-      <p>Should this have a date?</p>
-      <CurrentTaskComponent :task="current_task" />
-    </div>
-  </div>
+  <CurrentTaskComponent :task="current_task" prompt="Should this have a due date?"/>
   <div>
     <div class="row q-py-md button-row">
       <q-btn color="primary" label="Do today" @click="set_due_date('today')"/>

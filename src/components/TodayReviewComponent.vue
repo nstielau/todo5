@@ -85,13 +85,7 @@ export default {
 <template>
 <div v-if="current_task">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
-
-  <div class="row q-mb-md" id="current_task">
-    <div class="col-12">
-      <p>Are we gonna get to it today?</p>
-      <CurrentTaskComponent :task="current_task" />
-    </div>
-  </div>
+  <CurrentTaskComponent :task="current_task" prompt="Are we gonna get to it today?"/>
   <div class="col-12">
     <div class="row q-py-md button-row">
       <q-btn color="primary" label="Do today" @click="this.next_task"/>

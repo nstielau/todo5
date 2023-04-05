@@ -117,88 +117,64 @@ export default {
 <template>
 <div v-if="current_task">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Inbox Tasks"/>
-  <div class="row">
-    <div v-if="!current_task.hasOwnProperty('actionable')">
-      <q-slide-item @left="setActionable" @right="setInactionable">
-        <template v-slot:left>Actionable<q-icon name="done" /></template>
-        <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>      
-        <CurrentTaskComponent :task="current_task" prompt="Is this Actionable?"/>
+  <div v-if="!current_task.hasOwnProperty('actionable')">
+    <q-slide-item @left="setActionable" @right="setInactionable">
+      <template v-slot:left>Actionable<q-icon name="done" /></template>
+      <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>
+      <CurrentTaskComponent :task="current_task" prompt="Is this Actionable?"/>
+    </q-slide-item>
+  </div>
+
+  <div v-else-if="current_task.actionable">
+    <div v-if="!current_task.hasOwnProperty('quick')">
+      <q-slide-item @left="setQuick" @right="setSlow">
+        <template v-slot:left>Under 2min<q-icon name="done" /></template>
+        <template v-slot:right>Longer<q-icon name="alarm" /></template>
+        <CurrentTaskComponent :task="current_task" prompt="Is this under 2 mins to complete?"/>
       </q-slide-item>
     </div>
 
-    <div v-else-if="current_task.actionable">
-      <div v-if="!current_task.hasOwnProperty('quick')">
-        <q-slide-item @left="setQuick" @right="setSlow">
-          <template v-slot:left>Under 2min<q-icon name="done" /></template>
-          <template v-slot:right>Longer<q-icon name="alarm" /></template>
-          <div class="row q-mb-md" id="current_task">
-            <div class="col-12">
-                Is this under 2 mins to complete?
-                <CurrentTaskComponent :task="current_task" />
-            </div>
-          </div>
-        </q-slide-item>
-      </div>
-
-      <div v-else-if="current_task.quick">
-        <div class="row q-mb-md" id="current_task">
-          <div class="col-12">
-            <TimerComponent />
-            <CurrentTaskComponent :task="current_task" />
-          </div>
-        </div>
-        <div class="row button-row">
-          <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
-          <q-btn class="q-ma-sm" color="accent" label="Can't right now" @click="setSlow()"/>
-        </div>
-      </div>
-
-      <div v-else>
-       <div class="row q-mb-md" id="current_task">
-          <div class="col-12">
-              Is this part of a project?
-              <CurrentTaskComponent :task="current_task" />
-          </div>
-        </div>
-        <div class="row button-row">
-          <q-btn class="q-ma-sm"
-                 v-for="project in projects"
-                 :key="project.id"
-                 color="primary"
-                 :style="{backgroundColor: project.color + ' !important'}"
-                 :label="project.name"
-                 @click="setProjectForCurrentTask(project)"/>
-          <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
-          <p class="hint">Hint: change order and color in todoist app</p>
-        </div>
+    <div v-else-if="current_task.quick">
+      <TimerComponent />
+      <CurrentTaskComponent :task="current_task" prompt="Do it already!"/>
+      <div class="row button-row">
+        <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
+        <q-btn class="q-ma-sm" color="accent" label="Can't right now" @click="setSlow()"/>
       </div>
     </div>
 
-    <div v-else-if="!current_task.actionable">
-      <div class="row q-mb-md" id="current_task">
-        <div class="col-12" id="foo">
-            This isn't actionable.  Refine or close.
-            <div>
-              <q-popup-edit
-                cover buttons persistent
-                v-slot="scope"
-                v-model="current_task.content"
-                @save="(value, initialValue) => setContentForCurrentTask(value)">
-                <q-input
-                  type="textarea"
-                  v-model="scope.value"
-                  @keyup.enter="scope.set"
-                  dense autofocus counter/>
-              </q-popup-edit>
-
-                <CurrentTaskComponent :task="current_task" />
-              </div>
-
-          <div class="row button-row">
-            <q-btn class="q-ma-sm" color="negative" label="Close" @click="close_task()"/>
-          </div>
-        </div>
+    <div v-else>
+      <CurrentTaskComponent :task="current_task" prompt="Is this part of a project?"/>
+      <div class="row button-row">
+        <q-btn class="q-ma-sm"
+               v-for="project in projects"
+               :key="project.id"
+               color="primary"
+               :style="{backgroundColor: project.color + ' !important'}"
+               :label="project.name"
+               @click="setProjectForCurrentTask(project)"/>
+        <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
+        <p class="hint">Hint: change order and color in todoist app</p>
       </div>
+    </div>
+  </div>
+
+  <div v-else-if="!current_task.actionable">
+    <CurrentTaskComponent :task="current_task" prompt="This isn't actionable.  Refine or close."/>
+    <q-popup-edit
+      cover buttons persistent
+      v-slot="scope"
+      v-model="current_task.content"
+      @save="(value, initialValue) => setContentForCurrentTask(value)">
+      <q-input
+        type="textarea"
+        v-model="scope.value"
+        @keyup.enter="scope.set"
+        dense autofocus counter/>
+    </q-popup-edit>
+
+    <div class="row button-row">
+      <q-btn class="q-ma-sm" color="negative" label="Close" @click="close_task()"/>
     </div>
   </div>
 </div>

@@ -1,10 +1,9 @@
 <script>
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
-import CurrentTaskComponent from './CurrentTaskComponent.vue'
-import SpinnerComponent from './SpinnerComponent.vue'
+import SpinnerComponent from './partials/SpinnerComponent.vue'
+import CurrentTaskComponent from './partials/CurrentTaskComponent.vue'
 import ReviewHeaderComponent from './partials/ReviewHeaderComponent.vue'
-
 
 export default {
   data() {

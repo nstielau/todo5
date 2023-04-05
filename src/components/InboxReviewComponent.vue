@@ -3,9 +3,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
-import CurrentTaskComponent from './CurrentTaskComponent.vue'
 import TimerComponent from './TimerComponent.vue'
-import SpinnerComponent from './SpinnerComponent.vue'
+import SpinnerComponent from './partials/SpinnerComponent.vue'
+import CurrentTaskComponent from './partials/CurrentTaskComponent.vue'
 import ReviewHeaderComponent from './partials/ReviewHeaderComponent.vue'
 
 export default {

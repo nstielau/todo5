@@ -81,9 +81,9 @@ export default {
     },
     setContentForCurrentTask(content, old_content) {
       this.todoist.updateTask(this.current_task.id, { content: content })
-        .then((isSuccess) => console.log(isSuccess))
+        .then((isSuccess) => console.log("Set Content", isSuccess))
         .catch((error) => console.log(error));
-        setActionable();
+        this.setActionable();
     },
     next_task() {
       if (this.tasks.length == this.current_task_idx + 1) {

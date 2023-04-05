@@ -3,7 +3,6 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
-
 import CurrentTaskComponent from './CurrentTaskComponent.vue'
 import TimerComponent from './TimerComponent.vue'
 
@@ -152,6 +151,7 @@ export default {
         </div>
       </q-slide-item>
     </div>
+
     <div v-else-if="current_task.actionable">
       <div v-if="!current_task.hasOwnProperty('quick')">
         <q-slide-item @left="setQuick" @right="setSlow">
@@ -165,6 +165,7 @@ export default {
           </div>
         </q-slide-item>
       </div>
+
       <div v-else-if="current_task.quick">
         <div class="row q-mb-md" id="current_task">
           <div class="col-12">
@@ -177,14 +178,13 @@ export default {
           <q-btn class="q-ma-sm" color="accent" label="Can't right now" @click="setSlow()"/>
         </div>
       </div>
+      
       <div v-else>
        <div class="row q-mb-md" id="current_task">
           <div class="col-12">
               Is this part of a project?
               <CurrentTaskComponent :task="current_task" />
           </div>
-
-
         </div>
         <div class="row button-row">
           <q-btn class="q-ma-sm"

@@ -6,7 +6,7 @@ import CurrentTaskComponent from './CurrentTaskComponent.vue'
 export default {
   data() {
     return {
-      today_tasks: [],
+      tasks: [],
       projects: [],
       current_task_idx: 0,
       complete: false,
@@ -18,10 +18,10 @@ export default {
   },
   computed: {
     current_task() {
-      return this.today_tasks[this.current_task_idx];
+      return this.tasks[this.current_task_idx];
     },
     progress() {
-      return (this.current_task_idx+1)/this.today_tasks.length*100;
+      return (this.current_task_idx+1)/this.tasks.length*100;
     }
   },
   mounted() {
@@ -35,10 +35,10 @@ export default {
       }).catch((error) => console.log(error))
     this.todoist.getTasks({filter: "today"})
         .then((tasks) => {
-          this.today_tasks = tasks;
-          for (var i = 0; i < this.today_tasks.length; i++) {
+          this.tasks = tasks;
+          for (var i = 0; i < this.tasks.length; i++) {
             console.log("TODO: why isn't project setting here?")
-            this.today_tasks[i].project = projectsById[this.today_tasks[i].projectId]
+            this.tasks[i].project = projectsById[this.tasks[i].projectId]
           }
 
           if (!this.current_task) {
@@ -71,7 +71,7 @@ export default {
         }).catch((error) => console.log(error))
     },
     next_task() {
-      if (this.today_tasks.length - 1 == this.current_task_idx) {
+      if (this.tasks.length - 1 == this.current_task_idx) {
         this.$emit('complete');
       }
       this.current_task_idx = this.current_task_idx + 1
@@ -86,7 +86,7 @@ export default {
     <div class="col-9">
       <h1>
         Review Today's Tasks
-        <small>{{today_tasks.length}} Tasks for Today</small>
+        <small>{{tasks.length}} Tasks for Today</small>
       </h1>
     </div>
     <div class="col">
@@ -100,7 +100,7 @@ export default {
         color="accent"
         center-color="grey-9"
         class="q-ma-md"
-      >{{current_task_idx+1}}/{{today_tasks.length}}
+      >{{current_task_idx+1}}/{{tasks.length}}
     </q-circular-progress>
     </div>
   </div>

@@ -7,7 +7,7 @@ import CurrentTaskComponent from './CurrentTaskComponent.vue'
 export default {
   data() {
     return {
-      no_due_date_tasks: [],
+      tasks: [],
       projects: [],
       complete: false,
       current_task_idx: 0
@@ -18,10 +18,10 @@ export default {
   },
   computed: {
     current_task() {
-      return this.no_due_date_tasks[this.current_task_idx];
+      return this.tasks[this.current_task_idx];
     },
     progress() {
-      return (this.current_task_idx+1)/this.no_due_date_tasks.length*100;
+      return (this.current_task_idx+1)/this.tasks.length*100;
     }
   },
   mounted() {
@@ -54,9 +54,9 @@ export default {
       if (no_due_date_query) {
         todoist.getTasks({filter: no_due_date_query})
           .then((tasks) => {
-            this.no_due_date_tasks = tasks;
-            for (var i = 0; i < this.no_due_date_tasks.length; i++) {
-              this.no_due_date_tasks[i].project = projectsById[this.no_due_date_tasks[i].projectId]
+            this.tasks = tasks;
+            for (var i = 0; i < this.tasks.length; i++) {
+              this.tasks[i].project = projectsById[this.tasks[i].projectId]
             }
             if (!this.current_task) {
               console.log("No no due date tasks to review.");
@@ -92,8 +92,8 @@ export default {
       this.next_task();
     },
     next_task() {
-      if (this.no_due_date_tasks.length == this.current_task_idx + 1) {
-        console.log("Reviewed " + this.no_due_date_tasks.length + " overdue tasks.");
+      if (this.tasks.length == this.current_task_idx + 1) {
+        console.log("Reviewed " + this.tasks.length + " overdue tasks.");
         this.$emit('complete');
       }
       this.current_task_idx = this.current_task_idx + 1;
@@ -108,7 +108,7 @@ export default {
     <div class="col-9">
     <h1>
       Review Tasks WIth No Due Date
-      <small>{{no_due_date_tasks.length}} Tasks</small>
+      <small>{{tasks.length}} Tasks</small>
     </h1>
     </div>
     <div class="col">
@@ -122,7 +122,7 @@ export default {
         color="accent"
         center-color="grey-9"
         class="q-ma-md"
-      >{{current_task_idx+1}}/{{no_due_date_tasks.length}}
+      >{{current_task_idx+1}}/{{tasks.length}}
     </q-circular-progress>
     </div>
   </div>

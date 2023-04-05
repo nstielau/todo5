@@ -10,7 +10,7 @@ import TimerComponent from './TimerComponent.vue'
 export default {
   data() {
     return {
-      inbox_tasks: [],
+      tasks: [],
       projects: [],
       inbox_project_id: undefined,
       current_task_idx: 0,
@@ -24,13 +24,13 @@ export default {
   },
   computed: {
     current_task() {
-      return this.inbox_tasks[this.current_task_idx];
+      return this.tasks[this.current_task_idx];
     },
     isRecurring() {
       return (this.current_task.due && this.current_task.due.isRecurring);
     },
     progress() {
-      return (this.current_task_idx+1)/this.inbox_tasks.length*100;
+      return (this.current_task_idx+1)/this.tasks.length*100;
     },
   },
   emits: ['complete'],
@@ -53,10 +53,10 @@ export default {
               projectsById[projects[i].id] = projects[i].name;
           }
           this.todoist.getTasks({projectId: this.inbox_project_id})
-          .then(inbox_tasks => {
-            this.inbox_tasks = inbox_tasks;
-            for (var i = 0; i < this.inbox_tasks.length; i++) {
-              this.inbox_tasks[i].project = projectsById[this.inbox_tasks[i].projectId]
+          .then(tasks => {
+            this.tasks = tasks;
+            for (var i = 0; i < this.tasks.length; i++) {
+              this.tasks[i].project = projectsById[this.tasks[i].projectId]
             }
             if(!this.current_task) {
               console.log("No Inbox tasks to review");
@@ -91,8 +91,8 @@ export default {
         setActionable();
     },
     next_task() {
-      if (this.inbox_tasks.length == this.current_task_idx + 1) {
-        console.log("Reviewed " + this.inbox_tasks.length + " inbox tasks.");
+      if (this.tasks.length == this.current_task_idx + 1) {
+        console.log("Reviewed " + this.tasks.length + " inbox tasks.");
         this.$emit('complete');
       }
       this.current_task_idx = this.current_task_idx + 1;
@@ -125,7 +125,7 @@ export default {
     <div class="col-9">
     <h1>
       Review Inbox Tasks
-      <small>{{inbox_tasks.length}} Inbox Tasks</small>
+      <small>{{tasks.length}} Inbox Tasks</small>
     </h1>
     </div>
     <div class="col">
@@ -139,7 +139,7 @@ export default {
         color="accent"
         center-color="grey-9"
         class="q-ma-md"
-      >{{current_task_idx+1}}/{{inbox_tasks.length}}
+      >{{current_task_idx+1}}/{{tasks.length}}
     </q-circular-progress>
     </div>
 

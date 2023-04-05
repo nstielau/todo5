@@ -6,7 +6,7 @@ import CurrentTaskComponent from './CurrentTaskComponent.vue'
 export default {
   data() {
     return {
-      overdue_tasks: [],
+      tasks: [],
       projects: [],
       complete: false,
       current_task_idx: 0
@@ -17,10 +17,10 @@ export default {
   },
   computed: {
     current_task() {
-      return this.overdue_tasks[this.current_task_idx];
+      return this.tasks[this.current_task_idx];
     },
     progress() {
-      return (this.current_task_idx+1)/this.overdue_tasks.length*100;
+      return (this.current_task_idx+1)/this.tasks.length*100;
     }
   },
   mounted() {
@@ -35,9 +35,9 @@ export default {
       }).catch((error) => console.log(error))
     todoist.getTasks({filter: "overdue"})
       .then((tasks) => {
-        this.overdue_tasks = tasks;
-        for (var i = 0; i < this.overdue_tasks.length; i++) {
-          this.overdue_tasks[i].project = projectsById[this.overdue_tasks[i].projectId]
+        this.tasks = tasks;
+        for (var i = 0; i < this.tasks.length; i++) {
+          this.tasks[i].project = projectsById[this.tasks[i].projectId]
         }
         if (!this.current_task) {
           console.log("No overdue tasks to review.");
@@ -67,8 +67,8 @@ export default {
       this.next_task();
     },
     next_task() {
-      if (this.overdue_tasks.length == this.current_task_idx + 1) {
-        console.log("Reviewed " + this.overdue_tasks.length + " overdue tasks.");
+      if (this.tasks.length == this.current_task_idx + 1) {
+        console.log("Reviewed " + this.tasks.length + " overdue tasks.");
         this.$emit('complete');
       }
       this.current_task_idx = this.current_task_idx + 1;
@@ -83,7 +83,7 @@ export default {
     <div class="col-9">
     <h1>
       Review Overdue Tasks
-      <small>{{overdue_tasks.length}} Overdue Tasks</small>
+      <small>{{tasks.length}} Overdue Tasks</small>
     </h1>
     </div>
     <div class="col">
@@ -97,7 +97,7 @@ export default {
         color="accent"
         center-color="grey-9"
         class="q-ma-md"
-      >{{current_task_idx+1}}/{{overdue_tasks.length}}
+      >{{current_task_idx+1}}/{{tasks.length}}
     </q-circular-progress>
     </div>
   </div>

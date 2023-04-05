@@ -3,7 +3,7 @@
     <div class="col"></div>
     <div class="col-6">
       <q-spinner-gears size="100px" color="accent" />
-      <div v-if="complete">{{title}}</div><div v-else class="invisible"></div>
+      <div v-if="completed">{{title}}</div><div v-else class="invisible"></div>
     </div>
     <div class="col"></div>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props : ['complete', 'title'],
+  props : ['completed', 'title'],
   data(){
     return{
       timer : null

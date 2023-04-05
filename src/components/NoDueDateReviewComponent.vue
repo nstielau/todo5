@@ -121,5 +121,5 @@ export default {
     </div>
   </div>
 </div>
-<SpinnerComponent title="No Tasks Without Due Dates To Review!" completed="complete" v-else/>
+<SpinnerComponent title="No Tasks Without Due Dates To Review!" :completed="complete" v-else/>
 </template>

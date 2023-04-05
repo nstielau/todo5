@@ -73,15 +73,6 @@ export default {
       }
       this.current_task_idx = this.current_task_idx + 1;
     },
-    findProjectNameById(project_id) {
-      console.log("Finding name for project " + project_id)
-      for (var i = 0; i < this.projects.length; i++) {
-        if (this.projects[i].id == project_id) {
-          return this.projects[i].name;
-        }
-      }
-      return undefined;
-    }
   }
 }
 </script>

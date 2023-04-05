@@ -2,6 +2,7 @@
 import { TodoistApi } from '@doist/todoist-api-typescript'
 
 import CurrentTaskComponent from './CurrentTaskComponent.vue'
+import SpinnerComponent from './SpinnerComponent.vue'
 
 export default {
   data() {
@@ -14,7 +15,7 @@ export default {
     }
   },
   components: {
-    CurrentTaskComponent
+    CurrentTaskComponent, SpinnerComponent
   },
   computed: {
     current_task() {
@@ -125,12 +126,5 @@ export default {
     </div>
   </div>
 </div>
-<div id="spinner" class="row fixed-center" style="justify-content:center;height:300px;width:300px;" v-else>
-  <div class="col"></div>
-  <div class="col-6">
-    <q-spinner-gears size="100px" color="accent" />
-    <div v-if="complete">No Today Tasks To Review!</div><div v-else class="invisible"></div>
-  </div>
-  <div class="col"></div>
-</div>
+<SpinnerComponent title="No Today Tasks To Review!" completed="complete" v-else/>
 </template>

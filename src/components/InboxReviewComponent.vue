@@ -66,6 +66,13 @@ export default {
   methods: {
     setProjectForCurrentTask(project) {
       console.log("Selected project " + project.name + " for Inbox task ID ÷" + this.current_task.id);
+      if (project.id == this.inbox_project_id) {
+        this.current_task.projectId = "123"
+        this.current_task.project = "Inbox (faux)"
+        return
+      }
+      this.current_task.projectId = project.id
+      this.current_task.project = project.name
       axios.request('https://api.todoist.com/sync/v9/sync', {
         method: 'POST',
         headers: {'Authorization': 'Bearer ' + this.todoist_token},
@@ -76,12 +83,15 @@ export default {
       })
       .then(response => console.log("Successfully set project"))
       .catch(error => console.log(error));
-      // Ignoring the ressponse, assuming it works for speedier UX
-      this.next_task();
     },
     setContentForCurrentTask(content, old_content) {
       this.todoist.updateTask(this.current_task.id, { content: content })
         .then((isSuccess) => console.log("Set Content", isSuccess))
+        .catch((error) => console.log(error));
+    },
+    setLabelForCurrentTask(label) {
+      this.todoist.updateTask(this.current_task.id, { labels: [label] })
+        .then((isSuccess) => console.log("Set label", isSuccess))
         .catch((error) => console.log(error));
     },
     next_task() {
@@ -153,7 +163,7 @@ export default {
       </div>
     </div>
 
-    <div v-else>
+    <div v-else-if="current_task.projectId == this.inbox_project_id">
       <CurrentTaskComponent :task="current_task" prompt="Is this part of a project?"/>
       <div class="row button-row">
         <q-btn class="q-ma-sm"
@@ -165,6 +175,17 @@ export default {
                @click="setProjectForCurrentTask(project)"/>
         <q-btn class="q-ma-sm" color="positive" label="Done" @click="close_task()"/>
         <p class="hint">Hint: change order and color in todoist app</p>
+      </div>
+    </div>
+
+    <div v-else>
+      <CurrentTaskComponent :task="current_task" prompt="Set the Context!"/>
+      <div class="row button-row">
+        <q-btn class="q-ma-sm"
+               v-for="context in ['Agendas', 'Anywhere', 'Calls', 'Home', 'Computer', 'Errands', 'Office']"
+               color="primary"
+               :label="context"
+               @click="setLabelForCurrentTask(context)"/>
       </div>
     </div>
   </div>
@@ -184,7 +205,7 @@ export default {
     </q-popup-edit>
     <div class="row button-row">
       <q-btn class="q-ma-sm" color="negative" label="Close" @click="close_task()"/>
-      <q-btn class="q-ma-sm" color="negative" label="Someday, Maybe" @click="setProjectForCurrentTask('Someday')"/>
+      <q-btn class="q-ma-sm" color="negative" label="Someday, Maybe" @click="setLabelForCurrentTask('Someday')"/>
       <q-btn class="q-ma-sm" color="accent" label="Actually, actionable" @click="setActionable()"/>
     </div>
   </div>

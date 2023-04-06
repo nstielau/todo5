@@ -111,6 +111,7 @@ export default {
   <div>
     <div class="row q-py-md button-row">
       <q-btn color="primary" label="Do today" @click="set_due_date('today')"/>
+      <q-btn color="primary" label="Do Tomorrow" @click="set_due_date('tomorrow')"/>
       <q-btn color="primary" label="Do next week" @click="set_due_date('next week')"/>
       <q-btn color="primary" label="In 7 days" @click="set_due_date('in 7 days')"/>
     </div>

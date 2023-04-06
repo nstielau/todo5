@@ -84,8 +84,8 @@ export default {
             todoist.addComment({
                 taskId: this.task_id,
                 content: "Rescheduled from " + new Date().toISOString().split('T')[0],
-            }).catch((error) => console.log(error))
-          }).catch((error) => console.log(error))
+            }).catch((error) => console.log("Error addig comment", error))
+          }).catch((error) => console.log("Error setting due string", error))
     },
     close_task() {
       var todoist = new TodoistApi(localStorage.getItem('todoist_token'));

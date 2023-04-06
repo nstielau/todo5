@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <h2>{{min}}:{{sec}}</h2>
+  <div class="row button-row">
+    <div class="col"></div>
+    <div class="col-4"><h2>{{min}}:{{sec}}</h2></div>
+    <div class="col"></div>
   </div>
 </template>
 

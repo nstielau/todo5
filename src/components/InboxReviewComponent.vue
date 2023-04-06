@@ -93,6 +93,7 @@ export default {
       this.todoist.updateTask(this.current_task.id, { labels: [label] })
         .then((isSuccess) => console.log("Set label", isSuccess))
         .catch((error) => console.log(error));
+      this.next_task()
     },
     next_task() {
       if (this.tasks.length == this.current_task_idx + 1) {

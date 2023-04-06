@@ -83,7 +83,6 @@ export default {
       this.todoist.updateTask(this.current_task.id, { content: content })
         .then((isSuccess) => console.log("Set Content", isSuccess))
         .catch((error) => console.log(error));
-        this.setActionable();
     },
     next_task() {
       if (this.tasks.length == this.current_task_idx + 1) {
@@ -122,6 +121,17 @@ export default {
       <template v-slot:left>Actionable<q-icon name="done" /></template>
       <template v-slot:right>Needs Refinement<q-icon name="alarm" /></template>
       <CurrentTaskComponent :task="current_task" prompt="Is this Actionable?"/>
+      <q-popup-edit
+        cover buttons persistent
+        v-slot="scope"
+        v-model="current_task.content"
+        @save="(value, initialValue) => setContentForCurrentTask(value)">
+        <q-input
+          type="textarea"
+          v-model="scope.value"
+          @keyup.enter="scope.set"
+          dense autofocus counter/>
+      </q-popup-edit>
     </q-slide-item>
   </div>
 
@@ -172,9 +182,10 @@ export default {
         @keyup.enter="scope.set"
         dense autofocus counter/>
     </q-popup-edit>
-
     <div class="row button-row">
       <q-btn class="q-ma-sm" color="negative" label="Close" @click="close_task()"/>
+      <q-btn class="q-ma-sm" color="negative" label="Someday, Maybe" @click="setProjectForCurrentTask('Someday')"/>
+      <q-btn class="q-ma-sm" color="accent" label="Actually, actionable" @click="setActionable()"/>
     </div>
   </div>
 </div>

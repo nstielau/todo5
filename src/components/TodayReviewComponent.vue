@@ -45,7 +45,6 @@ export default {
             console.log("TODO: why isn't project setting here?")
             this.tasks[i].project = projectsById[this.tasks[i].projectId]
           }
-
           if (!this.current_task) {
             console.log("No Today tasks to review");
             this.complete = true;
@@ -94,6 +93,10 @@ export default {
     <q-list bordered separator>
       <q-item no-wrap v-ripple v-for="task in tasks">
         <q-item-section>{{task.content}}</q-item-section>
+        <q-item-section side top v-if="task.labels.length > 0">
+          <q-item-label caption>{{task.labels[0]}}</q-item-label>
+          <q-item-label v-if="task.project" caption>#{{task.project}}</q-item-label>
+        </q-item-section>
       </q-item>
     </q-list>
     <div class="col-12">
@@ -141,6 +144,10 @@ export default {
   <q-list bordered separator>
     <q-item no-wrap v-ripple v-for="task in tasks">
       <q-item-section>{{task.content}}</q-item-section>
+      <q-item-section side top v-if="task.labels.length > 0">
+        <q-item-label caption>{{task.labels[0]}}</q-item-label>
+        <q-item-label v-if="task.project" caption>#{{task.project}}</q-item-label>
+      </q-item-section>
     </q-item>
   </q-list>
   <div class="col-12">

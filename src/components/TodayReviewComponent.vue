@@ -91,11 +91,11 @@ export default {
 <div v-if="current_task">
   <div v-if="show_overview">
     <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
-    <ul>
-        <li class="q-ma-sm" v-for="task in tasks">
-          {{task.content}}
-        </li>
-    </ul>
+    <q-list bordered separator>
+      <q-item no-wrap v-ripple v-for="task in tasks">
+        <q-item-section>{{task.content}}</q-item-section>
+      </q-item>
+    </q-list>
     <div class="col-12">
       <div class="row q-py-md button-row">
         <q-btn color="positive" label="Let's review" @click="this.show_overview = false"/>
@@ -137,12 +137,12 @@ export default {
 
 <div v-else-if="tasks.length > 0">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
-  <ul>
-      <!-- These tasks may be been delayed.  Maybe remount? -->
-      <li class="q-ma-sm" v-for="task in tasks">
-        {{task.content}}
-      </li>
-  </ul>
+  <!-- These tasks may be been delayed.  Maybe remount? -->
+  <q-list bordered separator>
+    <q-item no-wrap v-ripple v-for="task in tasks">
+      <q-item-section>{{task.content}}</q-item-section>
+    </q-item>
+  </q-list>
   <div class="col-12">
     <div class="row q-py-md button-row">
       <q-btn color="positive" label="All done!" @click="this.$emit('complete');"/>
@@ -152,11 +152,3 @@ export default {
 
 <SpinnerComponent v-else title="No Today Tasks To Review!" :completed="complete" />
 </template>
-
-<style type="text/css">
-  li {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-</style>

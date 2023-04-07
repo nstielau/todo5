@@ -138,6 +138,7 @@ export default {
 <div v-else-if="tasks.length > 0">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
   <ul>
+      <!-- These tasks may be been delayed.  Maybe remount? -->
       <li class="q-ma-sm" v-for="task in tasks">
         {{task.content}}
       </li>

@@ -90,6 +90,7 @@ export default {
 <div v-if="current_task">
   <div v-if="show_overview">
     <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
+    <q-scroll-area style="height: 300px;">
     <q-list bordered separator>
       <q-item no-wrap v-ripple v-for="task in tasks">
         <q-item-section>{{task.content}}</q-item-section>
@@ -99,6 +100,7 @@ export default {
         </q-item-section>
       </q-item>
     </q-list>
+  </q-scroll-area>
     <div class="col-12">
       <div class="row q-py-md button-row">
         <q-btn color="positive" label="Let's review" @click="this.show_overview = false"/>
@@ -141,6 +143,7 @@ export default {
 <div v-else-if="tasks.length > 0">
   <ReviewHeaderComponent :total="tasks.length" :current_idx="current_task_idx" title="Review Today's Tasks"/>
   <!-- These tasks may be been delayed.  Maybe remount? -->
+  <q-scroll-area style="height: 300px;">
   <q-list bordered separator>
     <q-item no-wrap v-ripple v-for="task in tasks">
       <q-item-section>{{task.content}}</q-item-section>
@@ -150,6 +153,7 @@ export default {
       </q-item-section>
     </q-item>
   </q-list>
+  </q-scroll-area>
   <div class="col-12">
     <div class="row q-py-md button-row">
       <q-btn color="positive" label="All done!" @click="this.$emit('complete');"/>
